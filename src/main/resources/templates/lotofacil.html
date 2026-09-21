@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lotofácil - Dashboard Inteligente</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --lotofacil-primary: #6A0DAD;
+            --lotofacil-secondary: #9B59B6;
+            --lotofacil-accent: #00A859;
+            --lotofacil-gold: #FFD700;
+            --dark-bg: #1a1a2e;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--lotofacil-primary) 0%, var(--lotofacil-secondary) 50%, #8B4513 100%);
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(255,215,0,0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(106,13,173,0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 1;
+            padding: 2rem 0;
+        }
+
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--lotofacil-primary), var(--lotofacil-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .lotofacil-header {
+            background: linear-gradient(135deg, var(--lotofacil-primary) 0%, var(--lotofacil-secondary) 100%);
+            color: white;
+            padding: 1.5rem 0;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(106, 13, 173, 0.2);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lotofacil-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .dashboard-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background: white;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 2px solid rgba(106, 13, 173, 0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(135deg, var(--lotofacil-primary), var(--lotofacil-secondary));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--lotofacil-primary);
+            box-shadow: 0 10px 25px rgba(106, 13, 173, 0.15);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            color: var(--lotofacil-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--lotofacil-primary), var(--lotofacil-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--lotofacil-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-header-custom {
+            background: linear-gradient(135deg, var(--lotofacil-primary) 0%, var(--lotofacil-secondary) 100%);
+            color: white;
+            border-radius: 20px 20px 0 0;
+            padding: 1.2rem 1.5rem;
+            font-weight: 600;
+        }
+
+        .number-ball {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--lotofacil-primary) 0%, var(--lotofacil-secondary) 100%);
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0 8px;
+            box-shadow: 0 4px 12px rgba(106, 13, 173, 0.4);
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .number-ball:hover {
+            transform: scale(1.15);
+            box-shadow: 0 6px 16px rgba(106, 13, 173, 0.5);
+        }
+
+        .number-ball-highlight {
+            background: linear-gradient(135deg, var(--lotofacil-gold) 0%, #FFA500 100%);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5);
+            color: #333;
+            text-shadow: none;
+        }
+
+        .number-ball-highlight:hover {
+            box-shadow: 0 6px 16px rgba(255, 215, 0, 0.6);
+        }
+
+        .btn-lotofacil {
+            background: linear-gradient(135deg, var(--lotofacil-primary) 0%, var(--lotofacil-secondary) 100%);
+            border: none;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(106, 13, 173, 0.3);
+        }
+
+        .btn-lotofacil:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(106, 13, 173, 0.4);
+            color: white;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: white;
+            color: var(--lotofacil-primary);
+        }
+
+        .result-item {
+            background: linear-gradient(135deg, rgba(106, 13, 173, 0.05) 0%, rgba(155, 89, 182, 0.05) 100%);
+            border-radius: 15px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--lotofacil-primary);
+            transition: all 0.3s ease;
+        }
+
+        .result-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(106, 13, 173, 0.1);
+        }
+
+        .form-control {
+            border-radius: 15px;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--lotofacil-primary);
+            box-shadow: 0 0 0 0.2rem rgba(106, 13, 173, 0.1);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .lucky-star {
+            color: var(--lotofacil-gold);
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .badge-lotofacil {
+            background: linear-gradient(135deg, var(--lotofacil-primary), var(--lotofacil-secondary));
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--lotofacil-gold);
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: particleFloat 25s infinite;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.15;
+            }
+            90% {
+                opacity: 0.15;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .chart-container {
+            height: 300px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(106, 13, 173, 0.05) 0%, rgba(155, 89, 182, 0.05) 100%);
+            border-radius: 15px;
+        }
+
+        .chart-bar {
+            width: 40px;
+            background: linear-gradient(135deg, var(--lotofacil-primary), var(--lotofacil-secondary));
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .chart-bar:hover {
+            transform: scaleY(1.1);
+        }
+
+        .chart-bar::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--lotofacil-primary);
+        }
+
+        .chart-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #666;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="container main-container">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-custom">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <i class="fas fa-clover me-2"></i>Loterias
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/"><i class="fas fa-home me-1"></i> Início</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/lotofacil"><i class="fas fa-ticket-alt me-1"></i> Lotofácil</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Header Compacto -->
+        <div class="lotofacil-header">
+            <div class="container d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="lotofacil-title">
+                        <i class="fas fa-ticket-alt me-2"></i>Lotofácil
+                    </h1>
+                </div>
+                <a href="/" class="btn btn-back">
+                    <i class="fas fa-arrow-left me-2"></i>Voltar
+                </a>
+            </div>
+        </div>
+
+        <!-- Dashboard Stats -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-number" id="totalSorteios">0</div>
+                    <div class="stat-label">Total de Sorteios</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-number" id="ultimoConcurso">0</div>
+                    <div class="stat-label">Último Concurso</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="stat-number" id="dataUltimoConcurso">--</div>
+                    <div class="stat-label">Data do Último</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="stat-number" id="totalAcumulado">0</div>
+                    <div class="stat-label">Acumulados Total</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Análise e Gerador -->
+        <div class="row g-4">
+            <!-- Análise -->
+            <div class="col-lg-6">
+                <div class="card dashboard-card">
+                    <div class="card-header card-header-custom">
+                        <i class="fas fa-search me-2"></i>Análise de Jogo
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label for="jogoAnalise" class="form-label">Digite seu jogo (15 números):</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="jogoAnalise"
+                                       placeholder="Ex: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15">
+                                <button class="btn btn-lotofacil" onclick="analisarJogo()">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ultimosSorteiosAnalise" class="form-label">Últimos X sorteios:</label>
+                            <input type="number" class="form-control" id="ultimosSorteiosAnalise" value="100" min="1" max="1000">
+                        </div>
+
+                        <div class="loading-spinner" id="loadingAnalise">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Carregando...</span>
+                            </div>
+                        </div>
+
+                        <div id="resultadoAnalise">
+                            <!-- Results will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gerador -->
+            <div class="col-lg-6">
+                <div class="card dashboard-card">
+                    <div class="card-header card-header-custom">
+                        <i class="fas fa-magic me-2"></i>Gerador de Jogos
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label for="quantidadeJogos" class="form-label">Quantidade de jogos:</label>
+                            <input type="number" class="form-control" id="quantidadeJogos" value="5" min="1" max="20">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ultimosSorteiosGerador" class="form-label">Base de análise:</label>
+                            <input type="number" class="form-control" id="ultimosSorteiosGerador" value="100" min="1" max="1000">
+                        </div>
+
+                        <div class="mb-3">
+                            <button class="btn btn-lotofacil w-100" onclick="gerarMaisSorteados()">
+                                <i class="fas fa-fire me-2"></i>Gerar Jogos
+                            </button>
+                        </div>
+
+                        <div class="loading-spinner" id="loadingGerador">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Carregando...</span>
+                            </div>
+                        </div>
+
+                        <div id="resultadoGerador">
+                            <!-- Generated games will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráfico de Frequência -->
+        <div class="row g-4 mt-4">
+            <div class="col-12">
+                <div class="card dashboard-card">
+                    <div class="card-header card-header-custom">
+                        <i class="fas fa-chart-bar me-2"></i>Números Mais Sorteados (Últimos 100 Concursos)
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" id="frequenciaChart">
+                            <!-- Chart will be generated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 12; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 25 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 20) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        // Carregar estatísticas ao iniciar
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarEstatisticas();
+            carregarGraficoFrequencia();
+        });
+
+        function carregarEstatisticas() {
+            fetch('/lotofacil/total')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('totalSorteios').textContent = data;
+                })
+                .catch(error => console.error('Erro ao carregar estatísticas:', error));
+
+            fetch('/lotofacil/ultimo')
+                .then(response => {
+                    if (!response.ok) return null;
+                    return response.json();
+                })
+                .then(data => {
+                    if (data) {
+                        document.getElementById('ultimoConcurso').textContent = data.concurso || 0;
+                        document.getElementById('dataUltimoConcurso').textContent = data.data || '--';
+                    }
+                })
+                .catch(error => console.error('Erro ao carregar último concurso:', error));
+
+            // Calcular total de acumulados
+            fetch('/lotofacil/todos')
+                .then(response => response.json())
+                .then(data => {
+                    let totalAcumulado = 0;
+                    data.forEach(sorteio => {
+                        if (sorteio.acumulou15 && sorteio.acumulou15 > 0) {
+                            totalAcumulado += sorteio.acumulou15;
+                        }
+                    });
+                    document.getElementById('totalAcumulado').textContent = totalAcumulado.toLocaleString();
+                })
+                .catch(error => {
+                    document.getElementById('totalAcumulado').textContent = '0';
+                });
+        }
+
+        function carregarGraficoFrequencia() {
+            fetch('/lotofacil/frequencia?ultimosSorteios=100')
+                .then(response => response.json())
+                .then(frequencia => {
+                    gerarGraficoFrequencia(frequencia);
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar frequência:', error);
+                    // Usar dados de exemplo em caso de erro
+                    const exemplo = {};
+                    for (let i = 1; i <= 25; i++) {
+                        exemplo[i] = Math.floor(Math.random() * 30) + 20;
+                    }
+                    gerarGraficoFrequencia(exemplo);
+                });
+        }
+
+        function gerarGraficoFrequencia(frequencia) {
+            const container = document.getElementById('frequenciaChart');
+            container.innerHTML = '';
+
+            // Ordenar por frequência e pegar os 10 mais sorteados
+            const sorted = Object.entries(frequencia)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+
+            const maxVal = Math.max(...sorted.map(([_, val]) => val));
+
+            sorted.forEach(([num, val]) => {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                const height = (val / maxVal) * 100;
+                bar.style.height = height + '%';
+                bar.setAttribute('data-value', val);
+
+                const label = document.createElement('div');
+                label.className = 'chart-label';
+                label.textContent = num;
+                bar.appendChild(label);
+
+                container.appendChild(bar);
+            });
+        }
+
+        function analisarJogo() {
+            const jogo = document.getElementById('jogoAnalise').value;
+            const ultimosSorteios = document.getElementById('ultimosSorteiosAnalise').value;
+
+            if (!jogo.trim()) {
+                alert('Por favor, digite um jogo para analisar');
+                return;
+            }
+
+            document.getElementById('loadingAnalise').style.display = 'block';
+            document.getElementById('resultadoAnalise').innerHTML = '';
+
+            const payload = {
+                jogo: jogo,
+                ultimosSorteios: ultimosSorteios ? parseInt(ultimosSorteios) : null
+            };
+
+            fetch('/analise/jogo', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(`Erro HTTP ${response.status}: ${text}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('loadingAnalise').style.display = 'none';
+                exibirResultadoAnalise(data);
+            })
+            .catch(error => {
+                document.getElementById('loadingAnalise').style.display = 'none';
+                alert('Erro ao analisar jogo: ' + error.message);
+            });
+        }
+
+        function exibirResultadoAnalise(data) {
+            const resultadoDiv = document.getElementById('resultadoAnalise');
+
+            if (!data || !data.resultados || data.resultados.length === 0) {
+                resultadoDiv.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Nenhum resultado com 11+ acertos encontrado nos ${data.totalSorteios || 0} sorteios analisados.
+                        <br><small class="d-block mt-2">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Isso significa que seu jogo não teve 11 ou mais acertos nos sorteios analisados.
+                            Tente aumentar a quantidade de sorteios analisados para ter mais chances de encontrar resultados.
+                        </small>
+                    </div>
+                `;
+                resultadoDiv.style.display = 'block';
+                return;
+            }
+
+            let html = `
+                <div class="alert alert-info mb-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Análise realizada:</strong> ${data.totalSorteios || 0} sorteios analisados
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <div class="text-center">
+                            <div class="badge-lotofacil">${data.acertos14 || 0}</div>
+                            <small class="text-muted d-block mt-1">14 Acertos</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-center">
+                            <div class="badge-lotofacil">${data.acertos15 || 0}</div>
+                            <small class="text-muted d-block mt-1">15 Acertos <i class="fas fa-star lucky-star"></i></small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-center">
+                            <div class="badge-lotofacil">${data.resultados.length}</div>
+                            <small class="text-muted d-block mt-1">Resultados (11+)</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Mostrar todos os resultados, não apenas os 3 primeiros
+            data.resultados.forEach(resultado => {
+                if (!resultado) return;
+
+                const numerosAcertados = resultado.numerosAcertados ? resultado.numerosAcertados.split(',') : [];
+                const dezenasSorteadas = resultado.dezenas ? resultado.dezenas.split(',') : [];
+
+                html += `
+                    <div class="result-item">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong>Conc. ${resultado.concurso || 'N/A'}</strong>
+                            <span class="badge ${resultado.acertos === 15 ? 'bg-danger' : 'bg-primary'}">
+                                ${resultado.acertos || 0} acertos
+                            </span>
+                        </div>
+                        <div class="mb-1">
+                            <small class="text-muted fw-bold">Acertos:</small><br>
+                            <div class="mt-2">
+                                ${numerosAcertados.map(d => `<span class="number-ball number-ball-highlight">${d}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            resultadoDiv.innerHTML = html;
+            resultadoDiv.style.display = 'block';
+        }
+
+        function gerarMaisSorteados() {
+            const quantidadeJogos = document.getElementById('quantidadeJogos').value;
+            const ultimosSorteios = document.getElementById('ultimosSorteiosGerador').value;
+
+            document.getElementById('loadingGerador').style.display = 'block';
+            document.getElementById('resultadoGerador').innerHTML = '';
+
+            fetch(`/analise/gerar/mais-sorteados?quantidadeJogos=${quantidadeJogos}&ultimosSorteios=${ultimosSorteios}`)
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(`Erro HTTP ${response.status}: ${text}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('loadingGerador').style.display = 'none';
+                    exibirJogosGerados(data);
+                })
+                .catch(error => {
+                    document.getElementById('loadingGerador').style.display = 'none';
+                    alert('Erro ao gerar jogos: ' + error.message);
+                });
+        }
+
+        function exibirJogosGerados(data) {
+            const resultadoDiv = document.getElementById('resultadoGerador');
+
+            if (!data || !data.jogos || data.jogos.length === 0) {
+                resultadoDiv.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Nenhum jogo foi gerado.
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `
+                <p class="text-muted mb-3"><i class="fas fa-info-circle me-1"></i>${data.descricao || ''}</p>
+            `;
+
+            data.jogos.forEach((jogo, index) => {
+                if (!jogo) return;
+
+                const numeros = jogo.split(',');
+                html += `
+                    <div class="result-item">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Jogo ${index + 1}</strong>
+                            <i class="fas fa-star lucky-star"></i>
+                        </div>
+                        <div class="mt-2">
+                            ${numeros.map(n => `<span class="number-ball number-ball-highlight">${n}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            resultadoDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

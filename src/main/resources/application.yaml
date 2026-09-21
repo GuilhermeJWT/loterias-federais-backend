@@ -1,3 +1,55 @@
 spring:
   application:
     name: loterias
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
+server:
+  port: 8080
+
+logging:
+  level:
+    br.com.systemgs.loterias: INFO
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+
+# Configurações de APIs de Loterias
+loterias:
+  api:
+    base-url: https://servicebus2.caixa.gov.br/portaldeloterias/api
+    jogos:
+      lotofacil:
+        nome: Lotofacil
+        endpoint: lotofacil
+        quantidade-dezenas: 15
+        maximo-numero: 25
+      megasena:
+        nome: Mega-Sena
+        endpoint: megasena
+        quantidade-dezenas: 6
+        maximo-numero: 60
+      lotomania:
+        nome: Lotomania
+        endpoint: lotomania
+        quantidade-dezenas: 20
+        maximo-numero: 100
+      quina:
+        nome: Quina
+        endpoint: quina
+        quantidade-dezenas: 5
+        maximo-numero: 80
