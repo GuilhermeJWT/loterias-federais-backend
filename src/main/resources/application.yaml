@@ -38,18 +38,3 @@ loterias:
         endpoint: lotofacil
         quantidade-dezenas: 15
         maximo-numero: 25
-      megasena:
-        nome: Mega-Sena
-        endpoint: megasena
-        quantidade-dezenas: 6
-        maximo-numero: 60
-      lotomania:
-        nome: Lotomania
-        endpoint: lotomania
-        quantidade-dezenas: 20
-        maximo-numero: 100
-      quina:
-        nome: Quina
-        endpoint: quina
-        quantidade-dezenas: 5
-        maximo-numero: 80

@@ -78,7 +78,7 @@ public class GeradorJogoService implements IGeradorJogoService {
 
     private String formatarJogo(List<Integer> numeros) {
         return numeros.stream()
-                .map(String::valueOf)
+                .map(n -> String.format("%02d", n))
                 .collect(Collectors.joining(","));
     }
 }

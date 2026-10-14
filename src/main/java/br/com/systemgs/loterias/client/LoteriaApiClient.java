@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * Cliente genérico para APIs de loterias
- * Pode ser usado para Lotofacil, Mega-Sena, Lotomania, Quina, etc.
+ * Pode ser usado para Lotofacil e outros jogos
  */
 @Component
 @RequiredArgsConstructor
@@ -19,7 +19,7 @@ public class LoteriaApiClient {
 
     /**
      * Busca o último concurso de um jogo específico
-     * @param jogo Nome do jogo (ex: lotofacil, megasena)
+     * @param jogo Nome do jogo (ex: lotofacil)
      * @return DTO com os dados do concurso
      */
     public LotofacilApiDTO buscarUltimoConcurso(String jogo) {
@@ -29,7 +29,7 @@ public class LoteriaApiClient {
 
     /**
      * Busca um concurso específico de um jogo
-     * @param jogo Nome do jogo (ex: lotofacil, megasena)
+     * @param jogo Nome do jogo (ex: lotofacil)
      * @param concurso Número do concurso
      * @return DTO com os dados do concurso
      */

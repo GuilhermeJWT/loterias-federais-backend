@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -136,7 +135,7 @@ public class AnaliseJogoService implements IAnaliseJogoService {
 
     private String formatarNumeros(List<Integer> numeros) {
         return numeros.stream()
-                .map(String::valueOf)
+                .map(n -> String.format("%02d", n))
                 .collect(java.util.stream.Collectors.joining(","));
     }
 }

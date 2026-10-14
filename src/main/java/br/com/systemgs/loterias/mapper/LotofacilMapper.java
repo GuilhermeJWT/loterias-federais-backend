@@ -99,6 +99,10 @@ public class LotofacilMapper {
         if (dezenas == null || dezenas.isEmpty()) {
             return "";
         }
-        return String.join(",", dezenas);
+        return dezenas.stream()
+                .map(Integer::parseInt)
+                .sorted()
+                .map(n -> String.format("%02d", n))
+                .collect(java.util.stream.Collectors.joining(","));
     }
 }

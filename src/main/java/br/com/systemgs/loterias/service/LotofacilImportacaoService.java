@@ -1,14 +1,11 @@
 package br.com.systemgs.loterias.service;
 
-import br.com.systemgs.loterias.dto.response.ImportacaoResultadoResponse;
 import br.com.systemgs.loterias.model.Lotofacil;
-import br.com.systemgs.loterias.service.interfaces.IImportacaoService;
 import br.com.systemgs.loterias.service.interfaces.ILotofacilApiService;
 import br.com.systemgs.loterias.service.interfaces.ILotofacilService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,12 +14,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Implementação do serviço de importação de concursos
+ * Serviço de importação de concursos da Lotofácil
  */
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ImportacaoService implements IImportacaoService {
+public class LotofacilImportacaoService {
 
     private final ILotofacilApiService lotofacilApiService;
     private final ILotofacilService lotofacilService;
@@ -31,7 +28,9 @@ public class ImportacaoService implements IImportacaoService {
     private static final int BATCH_SIZE = 50; // Pausa maior a cada 50 requisições
     private static final int BATCH_DELAY_MS = 5000; // 5 segundos de pausa a cada batch
 
-    @Override
+    /**
+     * Importa concursos em um intervalo específico
+     */
     @Async
     public CompletableFuture<ImportacaoResultado> importarConcursos(int concursoInicial, int concursoFinal) {
         log.info("🚀 Iniciando importação de concursos de {} a {}", concursoInicial, concursoFinal);
@@ -109,10 +108,12 @@ public class ImportacaoService implements IImportacaoService {
         return CompletableFuture.completedFuture(resultado);
     }
 
-    @Override
+    /**
+     * Importa todos os concursos disponíveis na API
+     */
     @Async
     public CompletableFuture<ImportacaoResultado> importarTodosConcursos() {
-        log.info("🎯 Iniciando importação completa de todos os concursos da Lotofacil");
+        log.info("🎯 Iniciando importação completa de todos os concursos da Lotofácil");
 
         try {
             // Busca o último concurso para saber o total
@@ -133,7 +134,9 @@ public class ImportacaoService implements IImportacaoService {
         }
     }
 
-    @Override
+    /**
+     * Importa os últimos X concursos
+     */
     @Async
     public CompletableFuture<ImportacaoResultado> importarUltimosConcursos(int quantidade) {
         log.info("🔄 Importando últimos {} concursos", quantidade);
@@ -157,7 +160,9 @@ public class ImportacaoService implements IImportacaoService {
         }
     }
 
-    @Override
+    /**
+     * Importa apenas os concursos que estão faltando no banco
+     */
     @Async
     public CompletableFuture<ImportacaoResultado> importarConcursosFaltantes() {
         log.info("🔍 Verificando concursos faltantes...");
@@ -194,16 +199,8 @@ public class ImportacaoService implements IImportacaoService {
     }
 
     /**
-     * Scheduled que roda automaticamente para importar novos concursos
-     * Configurado para rodar diariamente às 3 da manhã
+     * Verifica o último concurso salvo no banco
      */
-    @Scheduled(cron = "0 0 3 * * ?")
-    public void importacaoAutomatica() {
-        log.info("⏰ Iniciando importação automática agendada");
-        importarConcursosFaltantes();
-    }
-
-    @Override
     public int verificarUltimoConcursoSalvo() {
         return lotofacilService.buscarUltimosSorteios(1).stream()
                 .findFirst()
@@ -211,9 +208,11 @@ public class ImportacaoService implements IImportacaoService {
                 .orElse(0);
     }
 
-    @Override
-    public int verificarTotalConcursosSalvos() {
-        return (int) lotofacilService.contarTotalSorteios();
+    /**
+     * Verifica o total de concursos salvos no banco
+     */
+    public long verificarTotalConcursosSalvos() {
+        return lotofacilService.contarTotalSorteios();
     }
 
     /**
@@ -228,18 +227,5 @@ public class ImportacaoService implements IImportacaoService {
             int erros,
             long duracaoSegundos,
             String mensagem
-    ) {
-        public ImportacaoResultadoResponse toResponse() {
-            return new ImportacaoResultadoResponse(
-                    concursoInicial,
-                    concursoFinal,
-                    totalProcessados,
-                    novosImportados,
-                    jaExistiam,
-                    erros,
-                    duracaoSegundos,
-                    mensagem
-            );
-        }
-    }
+    ) {}
 }

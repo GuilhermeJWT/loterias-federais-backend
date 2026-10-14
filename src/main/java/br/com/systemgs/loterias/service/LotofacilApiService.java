@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class LotofacilApiService implements ILotofacilApiService {
 
     private final LoteriaApiClient loteriaApiClient;
-    private final LotofacilService lotofacilService;
+    private final ILotofacilService lotofacilService;
     private final LotofacilMapper lotofacilMapper;
 
     private static final String JOGO_LOTOFACIL = "lotofacil";
